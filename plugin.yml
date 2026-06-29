@@ -1,0 +1,32 @@
+# Название плагина — отображается в /plugins и логах сервера
+name: DeadPlugin
+
+# Версия плагина
+version: 1.0-SNAPSHOT
+
+# Главный класс плагина (полный путь: пакет + имя класса)
+main: com.yourname.deadplugin.DeadPlugin
+
+# Минимальная версия API Paper, с которой совместим плагин
+api-version: "1.21"
+
+# Описание плагина
+description: "Мини-игра в стиле Dead by Daylight / Among Us"
+
+# Автор
+author: YourName
+
+# Зависимости:
+# depend — ОБЯЗАТЕЛЬНЫЕ плагины. Без них наш плагин не запустится.
+# Это важно: мы обращаемся к API ModelEngine и MythicMobs напрямую,
+# поэтому они должны загрузиться РАНЬШЕ нашего плагина.
+depend:
+  - ModelEngine
+  - MythicMobs
+
+# Команды, которые регистрирует плагин
+commands:
+  deadgame:
+    description: "Управление мини-игрой Dead by Daylight"
+    usage: "/<command> [start|stop|status]"
+    permission: deadplugin.admin

@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+         http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- Идентификаторы проекта -->
+    <groupId>com.yourname</groupId>
+    <artifactId>DeadPlugin</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <properties>
+        <java.version>21</java.version>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <repositories>
+        <!-- Репозиторий Paper API (PaperMC) -->
+        <repository>
+            <id>papermc</id>
+            <url>https://repo.papermc.io/repository/maven-public/</url>
+        </repository>
+
+        <!--
+            Репозиторий ModelEngine (Rkdarst / Artillex-Studios).
+            ВАЖНО: ModelEngine распространяется через собственный Maven-репозиторий.
+            Если у тебя нет доступа — скачай JAR вручную с сайта разработчика
+            и установи локально командой:
+              mvn install:install-file -Dfile=ModelEngine.jar
+                -DgroupId=com.rian.modelengine -DartifactId=ModelEngine
+                -Dversion=ВЕРСИЯ -Dpackaging=jar
+        -->
+        <repository>
+            <id>Rkdarst-releases</id>
+            <url>https://mvn.lumine.io/repository/maven-public/</url>
+        </repository>
+
+        <!--
+            MythicMobs распространяется через репозиторий MythicCraft.
+            Аналогично — если нет доступа, ставь JAR локально.
+        -->
+        <repository>
+            <id>mythiccraft</id>
+            <url>https://mvn.mythiccraft.io/releases</url>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <!-- Paper API 1.21.4 — основное API Minecraft-сервера -->
+        <dependency>
+            <groupId>io.papermc.paper</groupId>
+            <artifactId>paper-api</artifactId>
+            <version>1.21.4-R0.1-SNAPSHOT</version>
+            <scope>provided</scope>
+            <!-- provided = Paper уже есть на сервере, в JAR плагина включать не нужно -->
+        </dependency>
+
+        <!--
+            ModelEngine API — используем для спавна кастомных 3D-моделей
+            и запуска анимаций через Blockbench-модели.
+            scope=provided — JAR ModelEngine уже лежит в папке plugins/ сервера.
+        -->
+        <dependency>
+            <groupId>com.rian.modelengine</groupId>
+            <artifactId>ModelEngineAPI</artifactId>
+            <version>R4.0.6</version>
+            <!-- Замени версию на актуальную для твоего сервера! -->
+            <scope>provided</scope>
+        </dependency>
+
+        <!--
+            MythicMobs API — используем для создания и управления мобами
+            через MythicMobs (если потребуется спавнить монстра через ММ).
+            scope=provided — JAR MythicMobs уже лежит в plugins/.
+        -->
+        <dependency>
+            <groupId>io.lumine</groupId>
+            <artifactId>Mythic-Dist</artifactId>
+            <version>5.6.1</version>
+            <!-- Замени версию на актуальную! -->
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!--
+                maven-shade-plugin: упаковывает все зависимости с scope=compile
+                внутрь финального JAR-файла плагина.
+                Зависимости с scope=provided НЕ включаются (они уже есть на сервере).
+            -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.5.0</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <createDependencyReducedPom>false</createDependencyReducedPom>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.11.0</version>
+                <configuration>
+                    <source>21</source>
+                    <target>21</target>
+                </configuration>
+            </plugin>
+        </plugins>
+        <!-- Имя выходного JAR-файла -->
+        <finalName>DeadPlugin</finalName>
+    </build>
+</project>
